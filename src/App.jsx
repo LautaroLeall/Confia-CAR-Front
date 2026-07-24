@@ -1,32 +1,35 @@
+// src/App.jsx
 import { useLocation } from 'react-router-dom';
-import Navbar from './components/NavBar/NavBar.jsx';
-import RoutesApp from './routes/routes';
-import carsData from './api/carsData';
+import Navbar from './components/Navbar/Navbar.jsx';
+import AppRoutes from './routes/routes.jsx';
+import PageProgress from './components/ui/PageProgress.jsx';
+import CustomToaster from './components/ui/CustomToaster.jsx';
 import './index.css';
 
+// Rutas donde el Navbar NO se muestra
+const ROUTES_WITHOUT_NAVBAR = ['/login', '/register'];
+
 const App = () => {
-  const location = useLocation();
+    const location = useLocation();
+    const showNavbar = !ROUTES_WITHOUT_NAVBAR.includes(location.pathname) && !location.pathname.startsWith('/admin');
 
-  // Rutas que muestran contenido especial como navbar
-  // para no mostrar en el 404 
-  const rutasConLayout = [
-    "/", "/home", "/cars", "/contact",
-    "/login", "/register", "/myBookings", "/myPayments"
-  ];
+    return (
+        <>
+            {/* Indicador de carga de cambio de página */}
+            <PageProgress />
 
-  const debeMostrarLayout = rutasConLayout.some((ruta) =>
-    location.pathname === ruta || location.pathname.startsWith("/car/")
-  );
+            {/* Navbar */}
+            {showNavbar && <Navbar />}
 
-  return (
-    <div className="app-container">
-      {debeMostrarLayout && <Navbar />}
-      <RoutesApp cars={carsData} />
-      {/* {shouldShowFooter && <Footer />} */}
-    </div>
-  );
+            {/* Contenido principal */}
+            <main key={location.pathname} className="main-content-wrapper animate-fade-in">
+                <AppRoutes />
+            </main>
+
+            {/* Componente Toaster independiente */}
+            <CustomToaster />
+        </>
+    );
 };
 
-
 export default App;
-
