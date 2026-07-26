@@ -1,10 +1,10 @@
 // src/container/Container.jsx
-import React from 'react'
 import { useState, useEffect } from 'react';
 import Background from '../components/Background/Background';
 import Hero from '../components/Hero/Hero';
+import './Container.css';
 
-// Container de la página principal (route "/")
+// Página principal — ocupa 100vh exacto, sin scroll
 const Container = () => {
     const heroData = [
         { text1: "Elegí", text2: "Tu camino" },
@@ -17,12 +17,13 @@ const Container = () => {
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setHeroCount((count) => (count === 2 ? 0 : count + 1));
+            setHeroCount(count => count === 2 ? 0 : count + 1);
         }, 3000);
         return () => clearInterval(interval);
     }, []);
+
     return (
-        <>
+        <div className="container-page">
             <Background playStatus={playStatus} heroCount={heroCount} />
             <Hero
                 setPlayStatus={setPlayStatus}
@@ -31,8 +32,8 @@ const Container = () => {
                 setHeroCount={setHeroCount}
                 playStatus={playStatus}
             />
-        </>
-    )
-}
+        </div>
+    );
+};
 
-export default Container
+export default Container;
