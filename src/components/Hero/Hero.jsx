@@ -1,28 +1,25 @@
 // src/components/Hero/Hero.jsx
 import { Link } from 'react-router-dom';
-import './Hero.css'
-import arrow_btn from '../../assets/inicio/arrow_btn.png'
-import play_icon from '../../assets/inicio/play_icon.png'
-import pause_icon from '../../assets/inicio/pause_icon.png'
+import './Hero.css';
+import arrow_btn from '../../assets/container/arrow_btn.png';
+import play_icon from '../../assets/container/play_icon.png';
+import pause_icon from '../../assets/container/pause_icon.png';
 
 const Hero = ({ heroData, heroCount, setHeroCount, playStatus, setPlayStatus }) => {
     return (
         <div className='hero'>
-            <div className="hero-text">
-                <p>
-                    {heroData.text1}
-                </p>
-                <p>
-                    {heroData.text2}
-                </p>
-            </div>
+            <h1 className="hero-text">
+                <span className="hero-line-1">{heroData.text1}</span>
+                <br />
+                <span className="hero-line-2">{heroData.text2}</span>
+            </h1>
 
             <div className="hero-explore">
                 <p className="m-0">
                     Explora los autos disponibles
                 </p>
-                <Link to="/cars" className="text-decoration-none">
-                    <img src={arrow_btn} alt="arrow" />
+                <Link to="/inicio" className="text-decoration-none" aria-label="Explora los autos disponibles">
+                    <img src={arrow_btn} alt="Explorar autos" width="50" height="50" loading="eager" />
                 </Link>
             </div>
 
@@ -33,12 +30,12 @@ const Hero = ({ heroData, heroCount, setHeroCount, playStatus, setPlayStatus }) 
                     <li className={heroCount === 2 ? "hero-dot orange" : "hero-dot"} onClick={() => setHeroCount(2)}></li>
                 </ul>
                 <div className="hero-play">
-                    <img src={playStatus ? pause_icon : play_icon} alt="play" onClick={() => setPlayStatus(!playStatus)} />
+                    <img src={playStatus ? pause_icon : play_icon} alt="Ver video" width="60" height="60" onClick={() => setPlayStatus(!playStatus)} />
                     <p className='m-0'>Ver el video</p>
                 </div>
             </div>
-        </div >
-    )
-}
+        </div>
+    );
+};
 
-export default Hero
+export default Hero;
