@@ -1,0 +1,178 @@
+/* MY BOOKINGS */
+.mybookings-page {
+    padding-bottom: 72px;
+    min-height: 100vh;
+}
+
+.mybookings-header {
+    margin-bottom: 28px;
+}
+
+/* TABS — estilo underline con scroll solo horizontal */
+.booking-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    scrollbar-width: thin;
+}
+
+.booking-tabs::-webkit-scrollbar {
+    height: 3px;
+}
+
+.booking-tabs::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+}
+
+.booking-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    margin-bottom: -1px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.booking-tab:hover {
+    color: var(--text-primary);
+    background: var(--bg-elevated);
+}
+
+.booking-tab.active {
+    color: var(--text-primary);
+    border-bottom-color: var(--primary-muted);
+    font-weight: 600;
+}
+
+.tab-count {
+    background: var(--bg-elevated);
+    border-radius: var(--radius-full);
+    padding: 1px 7px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.booking-tab.active .tab-count {
+    background: var(--primary-light);
+    color: var(--primary-muted);
+}
+
+/* LISTA */
+.bookings-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.booking-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    transition: var(--transition);
+}
+
+.booking-card:hover {
+    border-color: var(--border-active);
+}
+
+.booking-car-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.booking-car-img {
+    width: 68px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+}
+
+.booking-car-name {
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    margin-bottom: 2px;
+    color: var(--text-primary);
+}
+
+.booking-car-type {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+.booking-details {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.booking-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+}
+
+.booking-date svg {
+    color: var(--primary-muted);
+    font-size: 0.85rem;
+}
+
+.booking-price {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+}
+
+.booking-actions {
+    display: flex;
+    gap: 7px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 720px) {
+    .booking-card {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .booking-tabs {
+        overflow-x: auto;
+        overflow-y: hidden;
+        touch-action: pan-x;
+    }
+
+    .booking-tab {
+        white-space: nowrap;
+        padding: 10px 12px;
+    }
+}

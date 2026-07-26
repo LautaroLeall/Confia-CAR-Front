@@ -1,53 +1,76 @@
 // src/components/MyPayments/MyPayments.jsx
-import { useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
-import "./MyPayments.css";
+import { useState, useEffect } from 'react';
+import { FiCalendar, FiDollarSign } from 'react-icons/fi';
+import toast from 'react-hot-toast';
+import Badge from '../ui/Badge';
+import EmptyState from '../ui/EmptyState';
+import { PageLoader } from '../ui/Loader';
+import api from '../../services/api';
+import { formatBookingDate } from '../../utils/dateUtils';
+import './MyPayments.css';
 
 const MyPayments = () => {
-    const { user } = useContext(AuthContext);
-    const navigate = useNavigate();
+    const [payments, setPayments] = useState([]);
+    const [loading, setLoading] = useState(true);
 
-    // Obtenemos los pagos por email del usuario logueado
-    const pagosPorUsuario = JSON.parse(localStorage.getItem("paidCars")) || {};
-    const userEmail = user?.email;
-    const paidCars = userEmail ? pagosPorUsuario[userEmail] || [] : [];
+    useEffect(() => {
+        const fetchPayments = async () => {
+            try {
+                const { data } = await api.get('/api/bookings/my-payments');
+                setPayments(data);
+            } catch {
+                toast.error('Error al cargar pagos');
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchPayments();
+    }, []);
+
+    const total = payments.reduce((acc, p) => acc + (p.totalPrice || 0), 0);
+
+    if (loading) return <PageLoader text="Cargando historial de pagos..." />;
 
     return (
-        <div className="container-pagos d-flex flex-column">
-            <div className="container-myPayments">
-                <h2 className="title-pagos text-center">MIS PAGOS</h2>
-                <p className=" subtitle-payments text-center">
-                    Autos ya pagados {user?.name ? `por ${user.name}` : ""}
-                </p>
-
-                {paidCars.length === 0 ? (
-                    <div className="empty-payments text-center fst-italic">
-                        Aún no pagaste ningún auto. ¡Volvé cuando estés listo para acelerar!
+        <div className="mypayments-page page-container">
+            <div className="container">
+                <div className="mypayments-header">
+                    <div>
+                        <h1 className="section-title">Mis Pagos</h1>
+                        <p className="section-subtitle">Historial de reservas pagadas</p>
                     </div>
+                    {payments.length > 0 && (
+                        <div className="payments-total-single-line">
+                            <FiDollarSign className="payments-total-icon" />
+                            <span className="total-label-inline">Total gastado:</span>
+                            <span className="total-amount-inline">${total.toLocaleString()}</span>
+                        </div>
+                    )}
+                </div>
+
+                {payments.length === 0 ? (
+                    <EmptyState
+                        icon={<FiDollarSign />}
+                        title="Sin pagos registrados"
+                        description="Cuando realices un pago, aparecerá aquí tu historial."
+                    />
                 ) : (
-                    <div className="payments-grid d-flex flex-wrap align-items-center justify-content-center gap-5">
-                        {paidCars.map((car) => (
-                            <div className="payment-card" key={car.id || car.name}>
-                                <img src={car.image} alt={car.name} className="payment-img" />
-                                <div className="payment-info text-center">
-                                    <h5>{car.name}</h5>
-                                    <p className="text-primary mb-1">
-                                        {car.type} - {car.year}
-                                    </p>
-                                    {car.pickUpDate && car.dropOffDate && (
-                                        <div className="p-2 text-muted text-start">
-                                            <p className="m-0"><strong>{car.location}</strong></p>
-                                            <p className="m-0"><strong>Retiro:</strong> {car.pickUpDate}</p>
-                                            <p className="m-0"><strong>Entrega:</strong> {car.dropOffDate}</p>
-                                        </div>
-                                    )}
-                                    <button
-                                        className="btn btn-outline-primary mt-3"
-                                        onClick={() => navigate(`/car/${car.id}`)}
-                                    >
-                                        Ver auto
-                                    </button>
+                    <div className="payments-list">
+                        {payments.map(payment => (
+                            <div key={payment._id} className="payment-card glass-card animate-fade-in">
+                                <img src={payment.car?.image} alt={payment.car?.name} className="payment-car-img" />
+                                <div className="payment-info">
+                                    <h3>{payment.car?.name}</h3>
+                                    <div className="payment-date">
+                                        <FiCalendar />
+                                        {formatBookingDate(payment.pickUpDate, "d MMM")}
+                                        {' → '}
+                                        {formatBookingDate(payment.dropOffDate, "d MMM yyyy")}
+                                    </div>
+                                </div>
+                                <Badge status={payment.status} />
+                                <div className="payment-amount">
+                                    ${payment.totalPrice?.toLocaleString()}
                                 </div>
                             </div>
                         ))}
