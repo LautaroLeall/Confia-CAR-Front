@@ -7,28 +7,44 @@ import './GlobalLoader.css';
 const GlobalLoader = ({ children }) => {
     const [isBackendReady, setIsBackendReady] = useState(false);
     const [isFadingOut, setIsFadingOut] = useState(false);
+    const isReadyRef = useRef(false);
     const retriesRef = useRef(0);
 
     useEffect(() => {
         let isMounted = true;
         let timeoutId = null;
 
+        const unlockApp = () => {
+            if (!isMounted || isReadyRef.current) return;
+            isReadyRef.current = true;
+            setIsFadingOut(true);
+            timeoutId = setTimeout(() => {
+                if (isMounted) setIsBackendReady(true);
+            }, 600);
+        };
+
+        // Temporizador de seguridad máximo (12s) para nunca congelar la app si hay bloqueadores o fallos
+        const safetyTimer = setTimeout(() => {
+            if (isMounted && !isReadyRef.current) {
+                unlockApp();
+            }
+        }, 12000);
+
         const checkBackend = async () => {
             try {
-                const { data } = await api.get('/health');
+                const { data } = await api.get('/api/status');
                 if (data?.status === 'ok' && isMounted) {
-                    // Backend respondió — iniciar fade out
-                    setIsFadingOut(true);
-                    // Esperar la animación de fade (600ms) antes de mostrar la app
-                    timeoutId = setTimeout(() => {
-                        if (isMounted) setIsBackendReady(true);
-                    }, 600);
+                    clearTimeout(safetyTimer);
+                    unlockApp();
                 }
             } catch {
-                // Backend no responde — reintentar en 3 segundos
                 retriesRef.current += 1;
-                if (isMounted) {
-                    timeoutId = setTimeout(checkBackend, 3000);
+                // Si falla más de 5 veces o hay error de cliente, desbloquear igual
+                if (retriesRef.current >= 5) {
+                    clearTimeout(safetyTimer);
+                    unlockApp();
+                } else if (isMounted && !isReadyRef.current) {
+                    timeoutId = setTimeout(checkBackend, 2500);
                 }
             }
         };
@@ -38,6 +54,7 @@ const GlobalLoader = ({ children }) => {
         return () => {
             isMounted = false;
             if (timeoutId) clearTimeout(timeoutId);
+            if (safetyTimer) clearTimeout(safetyTimer);
         };
     }, []);
 
