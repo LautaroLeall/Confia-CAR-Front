@@ -1,7 +1,7 @@
 // src/App.jsx
 import { useLocation } from 'react-router-dom';
-import Navbar from './components/Navbar/Navbar.jsx';
-import AppRoutes from './routes/routes.jsx';
+import Navbar from './components/NavBar/NavBar.jsx';
+import AppRoutes from './routes/AppRoutes.jsx';
 import PageProgress from './components/ui/PageProgress.jsx';
 import CustomToaster from './components/ui/CustomToaster.jsx';
 import './index.css';

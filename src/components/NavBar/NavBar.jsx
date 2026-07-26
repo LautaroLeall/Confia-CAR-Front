@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fi';
 import logoSvg from '../../assets/logo/logo.svg';
 import { confirmAction } from '../../utils/alertUtils';
-import './Navbar.css';
+import './NavBar.css';
 
 const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
