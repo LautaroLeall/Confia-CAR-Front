@@ -32,7 +32,7 @@ const GlobalLoader = ({ children }) => {
 
         const checkBackend = async () => {
             try {
-                const { data } = await api.get('/api/status');
+                const { data } = await api.get('/');
                 if (data?.status === 'ok' && isMounted) {
                     clearTimeout(safetyTimer);
                     unlockApp();
