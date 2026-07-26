@@ -4,6 +4,7 @@ import { FiUser, FiMail, FiLock, FiSave, FiEye, FiEyeOff } from 'react-icons/fi'
 import { AuthContext } from '../../context/AuthContext';
 import toast from 'react-hot-toast';
 import api from '../../services/api';
+import UserAvatar from '../ui/UserAvatar.jsx';
 import './Profile.css';
 
 const Profile = () => {
@@ -30,7 +31,7 @@ const Profile = () => {
         }
     };
 
-    const getInitials = () => `${user?.firstName?.[0] || ''}${user?.lastName?.[0] || ''}`.toUpperCase();
+
 
     return (
         <div className="profile-page page-container">
@@ -42,10 +43,13 @@ const Profile = () => {
                     {/* INFO */}
                     <div className="profile-card glass-card animate-fade-in">
                         <div className="profile-avatar-section">
-                            {user?.avatar
-                                ? <img src={user.avatar} alt="Avatar" className="profile-avatar-img" />
-                                : <div className="profile-avatar-initials">{getInitials()}</div>
-                            }
+                            <UserAvatar
+                                avatar={user?.avatar}
+                                firstName={user?.firstName}
+                                lastName={user?.lastName}
+                                size={72}
+                                style={{ border: '3px solid var(--primary)' }}
+                            />
                             <div>
                                 <h2 className="profile-name">{user?.firstName} {user?.lastName}</h2>
                                 {user?.isAdmin && <span className="badge badge-admin">Administrador</span>}

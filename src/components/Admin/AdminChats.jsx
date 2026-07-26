@@ -16,6 +16,7 @@ import ChatWidget from '../Chat/ChatWidget';
 import Badge from '../ui/Badge';
 import { formatBookingDate } from '../../utils/dateUtils';
 import { confirmAction } from '../../utils/alertUtils';
+import UserAvatar from '../ui/UserAvatar.jsx';
 import './AdminChats.css';
 
 const AdminChats = () => {
@@ -183,13 +184,12 @@ const AdminChats = () => {
                                         onClick={() => setSelectedBookingId(b._id)}
                                     >
                                         <div className="item-avatar-wrapper">
-                                            {b.user?.avatar ? (
-                                                <img src={b.user.avatar} alt="User" className="item-avatar" />
-                                            ) : (
-                                                <div className="item-avatar-initials">
-                                                    {b.user?.firstName?.[0]}{b.user?.lastName?.[0]}
-                                                </div>
-                                            )}
+                                            <UserAvatar
+                                                avatar={b.user?.avatar}
+                                                firstName={b.user?.firstName}
+                                                lastName={b.user?.lastName}
+                                                size={40}
+                                            />
                                             {!isFinished && <span className="online-indicator" />}
                                         </div>
 
@@ -225,11 +225,12 @@ const AdminChats = () => {
                             <div className="selected-chat-header">
                                 <div className="selected-user-info">
                                     <div className="selected-avatar">
-                                        {selectedBooking.user?.avatar ? (
-                                            <img src={selectedBooking.user.avatar} alt="User" />
-                                        ) : (
-                                            <span>{selectedBooking.user?.firstName?.[0]}{selectedBooking.user?.lastName?.[0]}</span>
-                                        )}
+                                        <UserAvatar
+                                            avatar={selectedBooking.user?.avatar}
+                                            firstName={selectedBooking.user?.firstName}
+                                            lastName={selectedBooking.user?.lastName}
+                                            size={38}
+                                        />
                                     </div>
                                     <div className="header-text-details">
                                         <div className="user-title-line">
@@ -292,13 +293,12 @@ const AdminChats = () => {
 
                         <div className="details-user-card">
                             <div className="details-avatar">
-                                {selectedBooking.user?.avatar ? (
-                                    <img src={selectedBooking.user.avatar} alt="User" />
-                                ) : (
-                                    <div className="details-avatar-initials">
-                                        {selectedBooking.user?.firstName?.[0]}{selectedBooking.user?.lastName?.[0]}
-                                    </div>
-                                )}
+                                <UserAvatar
+                                    avatar={selectedBooking.user?.avatar}
+                                    firstName={selectedBooking.user?.firstName}
+                                    lastName={selectedBooking.user?.lastName}
+                                    size={64}
+                                />
                             </div>
                             <h3>{selectedBooking.user?.firstName} {selectedBooking.user?.lastName}</h3>
                             <p className="details-user-email">{selectedBooking.user?.email}</p>
