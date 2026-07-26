@@ -1,0 +1,43 @@
+/* ADMIN BOOKINGS MANAGEMENT STYLES */
+.admin-bookings-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admin-bookings-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-muted);
+}
+
+.admin-bookings-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.booking-tab-btn {
+    padding: 7px 14px;
+    border-radius: var(--radius-md);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border: 1px solid var(--border-muted);
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.booking-tab-btn:hover {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+}
+
+.booking-tab-btn.active {
+    background: var(--primary-light);
+    color: var(--primary-muted);
+    border-color: var(--primary);
+    font-weight: 600;
+}
