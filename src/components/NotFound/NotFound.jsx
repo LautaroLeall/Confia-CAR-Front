@@ -1,29 +1,27 @@
 // src/components/NotFound/NotFound.jsx
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import perdidoImage from "/public/404/auto_perdido.png";
-import "./NotFound.css";
+import { Link } from 'react-router-dom';
+import { FiArrowLeft } from 'react-icons/fi';
+import { FaCar } from 'react-icons/fa';
+import './NotFound.css';
 
-const NotFound = () => {
-    const navigate = useNavigate();
-
-    return (
-        <div className="notfound-container d-flex align-items-center justify-content-center">
-            <div className="notfound-content text-center">
-                <h1 className="neon-text">404</h1>
-                <p className="notfound-message">¡Ups! Parece que esta ruta no existe</p>
-                <p className="notfound-sub">¿Quizás te perdiste? Recalculando GPS...</p>
-
-                <div className="car-wrapper">
-                    <img src= {perdidoImage} className="auto-perdido" alt="auto-perdido"/>
-                </div>
-
-                <button className="btn-back" onClick={() => navigate("/")}>
-                    VOLVER AL INICIO
-                </button>
+const NotFound = () => (
+    <div className="notfound-page">
+        <div className="notfound-bg" />
+        <div className="notfound-content animate-slide-up">
+            <div className="notfound-icon">
+                <FaCar />
             </div>
+            <h1 className="notfound-code">404</h1>
+            <h2 className="notfound-title">Página no encontrada</h2>
+            <p className="notfound-desc">
+                Parece que este camino no lleva a ningún lado.<br />
+                Volvé al inicio y seguí explorando.
+            </p>
+            <Link to="/inicio" className="btn btn-primary btn-lg">
+                <FiArrowLeft /> Volver al inicio
+            </Link>
         </div>
-    );
-};
+    </div>
+);
 
 export default NotFound;
