@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@600;700;800&display=swap');
-@import './components/admin/Admin.css';
+@import './components/Admin/Admin.css';
 @import './components/ui/ui.css';
 @import './components/ui/DatePicker.css';
 @import './components/ui/Swal.css';
