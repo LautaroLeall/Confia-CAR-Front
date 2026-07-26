@@ -11,6 +11,7 @@ import Badge from '../ui/Badge';
 import api from '../../services/api';
 import toast from 'react-hot-toast';
 import { formatBookingDate } from '../../utils/dateUtils';
+import UserAvatar from '../ui/UserAvatar.jsx';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
@@ -120,9 +121,12 @@ const AdminDashboard = () => {
 
                                 {/* USUARIO */}
                                 <div className="rb-user-col">
-                                    <div className="rb-user-avatar">
-                                        {b.user?.firstName?.[0] || 'U'}
-                                    </div>
+                                    <UserAvatar
+                                        avatar={b.user?.avatar}
+                                        firstName={b.user?.firstName}
+                                        lastName={b.user?.lastName}
+                                        size={32}
+                                    />
                                     <div className="rb-user-details">
                                         <span className="rb-user-name">{b.user?.firstName} {b.user?.lastName}</span>
                                         <span className="rb-user-email">{b.user?.email || 'Cliente'}</span>

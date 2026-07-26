@@ -7,6 +7,7 @@ import { PageLoader } from '../ui/Loader';
 import EmptyState from '../ui/EmptyState';
 import { FiUsers } from 'react-icons/fi';
 import api from '../../services/api';
+import UserAvatar from '../ui/UserAvatar.jsx';
 import './AdminUsers.css';
 
 const AdminUsers = () => {
@@ -80,10 +81,13 @@ const AdminUsers = () => {
                                 <tr key={u._id}>
                                     <td>
                                         <div className="table-user-info">
-                                            {u.avatar
-                                                ? <img src={u.avatar} alt={u.firstName} className="table-avatar" />
-                                                : <div className="table-avatar-initials">{u.firstName?.[0]}{u.lastName?.[0]}</div>
-                                            }
+                                            <UserAvatar
+                                                avatar={u.avatar}
+                                                firstName={u.firstName}
+                                                lastName={u.lastName}
+                                                size={32}
+                                                style={{ borderRadius: 'var(--radius-sm)' }}
+                                            />
                                             <span>{u.firstName} {u.lastName}</span>
                                         </div>
                                     </td>

@@ -4,6 +4,7 @@ import { FiSend, FiX, FiMinus, FiMessageCircle, FiLock } from 'react-icons/fi';
 import { io } from 'socket.io-client';
 import api from '../../services/api';
 import { AuthContext } from '../../context/AuthContext';
+import UserAvatar from '../ui/UserAvatar.jsx';
 import './ChatWidget.css';
 
 const ChatWidget = ({ booking, onClose, embedded = false }) => {
@@ -88,7 +89,12 @@ const ChatWidget = ({ booking, onClose, embedded = false }) => {
                 <div className="chat-widget-header">
                     <div className="chat-header-info">
                         <div className="chat-header-avatar">
-                            {isAdmin ? (booking.user?.firstName?.[0] || 'U') : 'C'}
+                            <UserAvatar
+                                avatar={isAdmin ? booking.user?.avatar : null}
+                                firstName={isAdmin ? booking.user?.firstName : 'Confia'}
+                                lastName={isAdmin ? booking.user?.lastName : 'CAR'}
+                                size={32}
+                            />
                         </div>
                         <div className="chat-header-text">
                             <h4>{otherPersonName}</h4>

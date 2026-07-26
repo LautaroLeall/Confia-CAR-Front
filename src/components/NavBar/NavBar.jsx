@@ -9,6 +9,7 @@ import {
 } from 'react-icons/fi';
 import logoSvg from '../../assets/logo/logo.svg';
 import { confirmAction } from '../../utils/alertUtils';
+import UserAvatar from '../ui/UserAvatar.jsx';
 import './NavBar.css';
 
 const Navbar = () => {
@@ -57,10 +58,7 @@ const Navbar = () => {
         }
     };
 
-    const getInitials = () => {
-        if (!user) return '';
-        return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase();
-    };
+
 
     return (
         <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''} animate-slide-down`}>
@@ -130,10 +128,12 @@ const Navbar = () => {
                         <li className="mobile-menu-profile-row">
                             <div className="mobile-profile-card glass-card">
                                 <div className="mobile-profile-info">
-                                    {user.avatar
-                                        ? <img src={user.avatar} alt={user.firstName} className="mobile-avatar-img" />
-                                        : <span className="mobile-avatar-initials">{getInitials()}</span>
-                                    }
+                                    <UserAvatar
+                                        avatar={user.avatar}
+                                        firstName={user.firstName}
+                                        lastName={user.lastName}
+                                        size={38}
+                                    />
                                     <div className="mobile-user-details">
                                         <p className="mobile-user-name">{user.firstName} {user.lastName}</p>
                                         <p className="mobile-user-email">{user.email}</p>
@@ -160,10 +160,12 @@ const Navbar = () => {
                                 className="user-avatar-btn"
                                 onClick={() => setDropdownOpen(!dropdownOpen)}
                             >
-                                {user.avatar
-                                    ? <img src={user.avatar} alt={user.firstName} className="user-avatar-img" />
-                                    : <span className="user-avatar-initials">{getInitials()}</span>
-                                }
+                                <UserAvatar
+                                    avatar={user.avatar}
+                                    firstName={user.firstName}
+                                    lastName={user.lastName}
+                                    size={32}
+                                />
                                 <span className="user-name-short">{user.firstName}</span>
                             </button>
 
