@@ -1,83 +1,226 @@
-// src/components/NavBar/NavBar.jsx
-import { Link, useLocation } from 'react-router-dom';
-import { FaSignInAlt, FaUserPlus, FaBars } from 'react-icons/fa';
-import { useContext, useState } from 'react';
+// src/components/Navbar/Navbar.jsx
+import { useState, useContext, useEffect, useRef } from 'react';
+import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-import './NavBar.css';
+import {
+    FiMenu, FiX, FiUser, FiLogOut, FiShield,
+    FiCalendar, FiCreditCard, FiHome, FiGrid,
+    FiLogIn, FiUserPlus
+} from 'react-icons/fi';
+import logoSvg from '../../assets/logo/logo.svg';
+import { confirmAction } from '../../utils/alertUtils';
+import './Navbar.css';
 
-const NavBar = () => {
+const Navbar = () => {
     const { user, logout } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
-    const location = useLocation(); // Detectamos el cambio de ruta
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const dropdownRef = useRef(null);
 
-    const toggleMenu = () => setMenuOpen(!menuOpen);
-    const closeMenu = () => setMenuOpen(false); // Cierra el menú al hacer clic
+    // Scroll listener → efecto de fondo al bajar
+    useEffect(() => {
+        const onScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener('scroll', onScroll);
+        return () => window.removeEventListener('scroll', onScroll);
+    }, []);
+
+    // Cerrar dropdown al click fuera
+    useEffect(() => {
+        const handler = (e) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+                setDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handler);
+        return () => document.removeEventListener('mousedown', handler);
+    }, []);
+
+    // Cerrar menú mobile al cambiar de ruta
+    useEffect(() => {
+        setMenuOpen(false);
+        setDropdownOpen(false);
+    }, [location.pathname]);
+
+    const handleLogout = async () => {
+        const confirmed = await confirmAction({
+            title: '¿Cerrar sesión?',
+            text: 'Se cerrará tu sesión actual en ConfiaCAR.',
+            confirmButtonText: 'Sí, cerrar sesión',
+            icon: 'question'
+        });
+        if (confirmed) {
+            await logout();
+            navigate('/');
+        }
+    };
+
+    const getInitials = () => {
+        if (!user) return '';
+        return `${user.firstName?.[0] || ''}${user.lastName?.[0] || ''}`.toUpperCase();
+    };
 
     return (
-        // La key hace que este div se "remonte" cada vez que cambia la ruta, reiniciando la animación
-        <div
-            key={location.pathname}
-            className="nav d-flex align-items-center justify-content-between fade-down"
-        >
-            <div className='nav-logo'>
-                <Link to="/" onClick={closeMenu}>CONFIA CAR</Link> {/* Cierra al ir al inicio */}
-            </div>
+        <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''} animate-slide-down`}>
+            <div className="navbar-inner">
 
-            <div className="nav-toggle d-lg-none" onClick={toggleMenu}>
-                <FaBars />
-            </div>
+                {/* LOGO */}
+                <Link to="/" className="navbar-logo">
+                    <img src={logoSvg} alt="ConfiaCAR Logo" width="120" height="24" style={{ height: '24px', width: 'auto' }} />
+                    <span>Confia<span className="logo-accent">CAR</span></span>
+                </Link>
 
-            <ul className={`nav-menu ${menuOpen ? "active" : ""}`}>
-                <li className="nav-item">
-                    <Link to="/home" onClick={closeMenu}>Inicio</Link>
-                </li>
-                <li className="nav-item">
-                    <Link to="/cars" onClick={closeMenu}>Autos</Link>
-                </li>
-                <li className="nav-item">
-                    <Link to="/myBookings" onClick={closeMenu}>Mis Reservas</Link>
-                </li>
-                {user && (
-                    <li className="nav-item">
-                        <Link to="/myPayments" onClick={closeMenu}>Mis Pagos</Link>
+                {/* LINKS (DESKTOP & MOBILE DRAWER) */}
+                <ul className={`navbar-links ${menuOpen ? 'open' : ''}`}>
+                    <li>
+                        <NavLink to="/inicio" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+                            <FiHome className="mobile-nav-icon" />
+                            <span>Inicio</span>
+                        </NavLink>
                     </li>
-                )}
-
-                <div className="contact-auth d-flex align-items-center gap-5">
-                    <li className='nav-contact'>
-                        <Link to="/contact" onClick={closeMenu}>Contacto</Link>
+                    <li>
+                        <NavLink to="/autos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+                            <FiGrid className="mobile-nav-icon" />
+                            <span>Autos</span>
+                        </NavLink>
                     </li>
+                    {user && (
+                        <>
+                            <li>
+                                <NavLink to="/mireservas" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+                                    <FiCalendar className="mobile-nav-icon" />
+                                    <span>Mis Reservas</span>
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/mispagos" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>
+                                    <FiCreditCard className="mobile-nav-icon" />
+                                    <span>Mis Pagos</span>
+                                </NavLink>
+                            </li>
+                        </>
+                    )}
+                    {user?.isAdmin && (
+                        <li>
+                            <NavLink to="/admin" className={({ isActive }) => isActive ? 'nav-link nav-link-admin active' : 'nav-link nav-link-admin'}>
+                                <FiShield className="mobile-nav-icon" />
+                                <span>Admin</span>
+                            </NavLink>
+                        </li>
+                    )}
 
+                    {/* SECTOR DE AUTENTICACIÓN / PERFIL EN MENÚ MOBILE */}
+                    {!user ? (
+                        <li className="mobile-menu-auth-row">
+                            <div className="mobile-auth-card glass-card">
+                                <p className="mobile-auth-text">Accedé a tu cuenta para gestionar tus reservas</p>
+                                <div className="mobile-auth-btns-grid">
+                                    <Link to="/login" className="btn btn-ghost btn-mobile-auth">
+                                        <FiLogIn size={15} /> Ingresar
+                                    </Link>
+                                    <Link to="/register" className="btn btn-primary btn-mobile-auth">
+                                        <FiUserPlus size={15} /> Registrarse
+                                    </Link>
+                                </div>
+                            </div>
+                        </li>
+                    ) : (
+                        <li className="mobile-menu-profile-row">
+                            <div className="mobile-profile-card glass-card">
+                                <div className="mobile-profile-info">
+                                    {user.avatar
+                                        ? <img src={user.avatar} alt={user.firstName} className="mobile-avatar-img" />
+                                        : <span className="mobile-avatar-initials">{getInitials()}</span>
+                                    }
+                                    <div className="mobile-user-details">
+                                        <p className="mobile-user-name">{user.firstName} {user.lastName}</p>
+                                        <p className="mobile-user-email">{user.email}</p>
+                                    </div>
+                                </div>
+                                <div className="mobile-profile-actions">
+                                    <Link to="/perfil" className="btn btn-ghost btn-sm w-full">
+                                        <FiUser size={15} /> Mi perfil
+                                    </Link>
+                                    <button className="btn-danger-ghost w-full" onClick={handleLogout}>
+                                        <FiLogOut size={15} /> Cerrar sesión
+                                    </button>
+                                </div>
+                            </div>
+                        </li>
+                    )}
+                </ul>
+
+                {/* ACCIONES DERECHA */}
+                <div className="navbar-actions">
                     {user ? (
-                        <div className="d-flex align-items-center">
+                        <div className="user-menu" ref={dropdownRef}>
                             <button
-                                onClick={() => {
-                                    logout();
-                                    closeMenu(); // Cierra el menú (mobile) al cerrar sesión
-                                }}
-                                className="btn btn-logout btn-sm"
+                                className="user-avatar-btn"
+                                onClick={() => setDropdownOpen(!dropdownOpen)}
                             >
-                                Cerrar Sesión
+                                {user.avatar
+                                    ? <img src={user.avatar} alt={user.firstName} className="user-avatar-img" />
+                                    : <span className="user-avatar-initials">{getInitials()}</span>
+                                }
+                                <span className="user-name-short">{user.firstName}</span>
                             </button>
+
+                            {dropdownOpen && (
+                                <div className="user-dropdown animate-scale-in">
+                                    <div className="dropdown-header">
+                                        <p className="dropdown-name">{user.firstName} {user.lastName}</p>
+                                        <p className="dropdown-email">{user.email}</p>
+                                        {user.isAdmin && <span className="badge badge-admin mt-1">Admin</span>}
+                                    </div>
+                                    <div className="dropdown-divider" />
+                                    <Link to="/perfil" className="dropdown-item">
+                                        <FiUser /> Mi perfil
+                                    </Link>
+                                    <Link to="/mireservas" className="dropdown-item">
+                                        <FiCalendar /> Mis reservas
+                                    </Link>
+                                    <Link to="/mispagos" className="dropdown-item">
+                                        <FiCreditCard /> Mis pagos
+                                    </Link>
+                                    {user.isAdmin && (
+                                        <>
+                                            <div className="dropdown-divider" />
+                                            <Link to="/admin" className="dropdown-item dropdown-item-admin">
+                                                <FiShield /> Panel Admin
+                                            </Link>
+                                        </>
+                                    )}
+                                    <div className="dropdown-divider" />
+                                    <button className="dropdown-item dropdown-item-danger" onClick={handleLogout}>
+                                        <FiLogOut /> Cerrar sesión
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ) : (
-                        <div className="d-flex gap-5">
-                            <li className='nav-item'>
-                                <Link to="/register" title="Registrarse" className="nav-icon" onClick={closeMenu}>
-                                    <FaUserPlus />
-                                </Link>
-                            </li>
-                            <li className='nav-item'>
-                                <Link to="/login" title="Iniciar Sesión" className="nav-icon" onClick={closeMenu}>
-                                    <FaSignInAlt />
-                                </Link>
-                            </li>
-                        </div>
+                        <>
+                            {/* BOTONES EN DESKTOP ESTILIZADOS */}
+                            <div className="navbar-auth-btns desktop-auth-btns">
+                                <Link to="/login" className="nav-btn-login">Ingresar</Link>
+                                <Link to="/register" className="nav-btn-register">Registrarse</Link>
+                            </div>
+                        </>
                     )}
+
+                    {/* HAMBURGUESA MOBILE */}
+                    <button
+                        className="navbar-toggle"
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label="Menú"
+                    >
+                        {menuOpen ? <FiX size={22} /> : <FiMenu size={22} />}
+                    </button>
                 </div>
-            </ul>
-        </div>
+            </div>
+        </nav>
     );
 };
 
-export default NavBar;
+export default Navbar;
