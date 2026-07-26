@@ -40,7 +40,7 @@ api.interceptors.response.use(
         if (!response || [502, 503, 504].includes(response?.status)) {
             if (!isWakingUpToastActive) {
                 isWakingUpToastActive = true;
-                toast.loading('Iniciando servidor backend (Render)... Por favor aguardá unos segundos 🚀', {
+                toast.loading('Iniciando servidor backend (Render)... Por favor aguardá unos segundos', {
                     id: 'backend-waking-up',
                     duration: 25000,
                 });
