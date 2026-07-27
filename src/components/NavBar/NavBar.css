@@ -122,8 +122,14 @@
     gap: 6px;
     color: var(--info);
 }
-.nav-link-admin::after { background: var(--info); }
-.nav-link-admin:hover { color: #8cb4ff; }
+
+.nav-link-admin::after {
+    background: var(--info);
+}
+
+.nav-link-admin:hover {
+    color: #8cb4ff;
+}
 
 /* ACCIONES DERECHA */
 .navbar-actions {
@@ -247,7 +253,7 @@ li.mobile-menu-profile-row {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
     overflow: hidden;
     transform-origin: top right;
     z-index: 100;
@@ -312,13 +318,19 @@ li.mobile-menu-profile-row {
     background: rgba(88, 166, 255, 0.1);
     color: var(--info);
 }
-.dropdown-item-admin:hover svg { color: var(--info); }
+
+.dropdown-item-admin:hover svg {
+    color: var(--info);
+}
 
 .dropdown-item-danger:hover {
     background: var(--danger-bg);
     color: var(--danger);
 }
-.dropdown-item-danger:hover svg { color: var(--danger); }
+
+.dropdown-item-danger:hover svg {
+    color: var(--danger);
+}
 
 /* MOBILE HAMBURGER */
 .navbar-toggle {
@@ -350,7 +362,7 @@ li.mobile-menu-profile-row {
         padding: 24px;
         gap: 10px;
         border-bottom: 1px solid var(--border);
-        box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
         overflow-y: auto;
         z-index: 999;
     }
@@ -399,7 +411,9 @@ li.mobile-menu-profile-row {
         font-weight: 600;
     }
 
-    .navbar-toggle { display: block; }
+    .navbar-toggle {
+        display: block;
+    }
 
     /* MOBILE AUTH CARD */
     li.mobile-menu-auth-row,
