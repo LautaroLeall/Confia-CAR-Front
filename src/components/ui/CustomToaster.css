@@ -1,9 +1,8 @@
-/* CUSTOM TOASTER NOTIFICATIONS */
+/* CUSTOM TOASTER NOTIFICATIONS — ESTILO GLASSMORPHISM PREMIUM CONFIA-CAR */
 .custom-toast-popup {
-    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .custom-toast-popup:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transform: translateY(-3px) scale(1.01) !important;
 }
