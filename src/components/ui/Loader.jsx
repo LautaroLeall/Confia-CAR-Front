@@ -2,13 +2,15 @@
 import './ui.css';
 
 export const Spinner = ({ size = 'md', className = '' }) => (
-    <div className={`spinner ${size === 'sm' ? 'spinner-sm' : ''} ${className}`} />
+    <div className={`cc-spinner cc-spinner-${size} ${className}`} />
 );
 
 export const PageLoader = ({ text = 'Cargando...' }) => (
-    <div className="page-loader animate-fade-in">
-        <div className="spinner" />
-        <p className="ui-loader-text">{text}</p>
+    <div className="cc-page-loader animate-fade-in">
+        <div className="cc-page-loader-box glass-card">
+            <div className="cc-spinner cc-spinner-lg" />
+            <p className="cc-loader-text">{text}</p>
+        </div>
     </div>
 );
 
