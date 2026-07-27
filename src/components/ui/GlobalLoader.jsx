@@ -23,7 +23,7 @@ const GlobalLoader = ({ children }) => {
             }, 600);
         };
 
-        // Temporizador de seguridad máximo (12s) para nunca congelar la app si hay bloqueadores o fallos
+        // Temporizador de seguridad máximo (12s) para nunca congelar la app
         const safetyTimer = setTimeout(() => {
             if (isMounted && !isReadyRef.current) {
                 unlockApp();
@@ -39,7 +39,6 @@ const GlobalLoader = ({ children }) => {
                 }
             } catch {
                 retriesRef.current += 1;
-                // Si falla más de 5 veces o hay error de cliente, desbloquear igual
                 if (retriesRef.current >= 5) {
                     clearTimeout(safetyTimer);
                     unlockApp();
@@ -58,29 +57,43 @@ const GlobalLoader = ({ children }) => {
         };
     }, []);
 
-    // Si el backend ya respondió, mostrar la app directamente
     if (isBackendReady) return children;
 
     return (
-        <div className={`global-loader ${isFadingOut ? 'fade-out' : ''}`}>
-            {/* Logo con anillos orbitales */}
-            <div className="global-loader-logo-wrapper">
-                <div className="global-loader-ring" />
-                <div className="global-loader-ring-2" />
-                <img
-                    src={logoSvg}
-                    alt="Confia CAR"
-                    className="global-loader-logo"
-                />
+        <div className={`cc-global-loader ${isFadingOut ? 'fade-out' : ''}`}>
+            {/* Fondo con rejilla cibernética de alta precisión */}
+            <div className="cc-loader-bg-grid" />
+
+            {/* Tacómetro / Anillo Velocímetro Automotriz */}
+            <div className="cc-speedometer-wrapper">
+                {/* Anillos concéntricos de energía */}
+                <div className="cc-speedo-outer-glow" />
+                <div className="cc-speedo-dial" />
+                <div className="cc-speedo-sweep" />
+
+                {/* Logo central de Confia-CAR con destello metálico */}
+                <div className="cc-speedo-center">
+                    <img
+                        src={logoSvg}
+                        alt="Confia CAR Logo"
+                        className="cc-speedo-logo"
+                    />
+                </div>
             </div>
 
-            {/* Texto */}
-            <p className="global-loader-text">Preparando tu experiencia...</p>
-            <p className="global-loader-subtext">Esto puede tomar unos segundos</p>
+            {/* Marca de texto y estado */}
+            <div className="cc-loader-brand">
+                <h2 className="cc-loader-title">
+                    Confia<span className="cc-brand-accent">CAR</span>
+                </h2>
+                <p className="cc-loader-status">
+                    Encendiendo motores<span className="cc-dots-animation">...</span>
+                </p>
+            </div>
 
-            {/* Barra de progreso */}
-            <div className="global-loader-bar-track">
-                <div className="global-loader-bar-fill" />
+            {/* Barra de velocidad neón */}
+            <div className="cc-speed-bar-container">
+                <div className="cc-speed-bar-fill" />
             </div>
         </div>
     );
